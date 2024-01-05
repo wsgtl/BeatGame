@@ -1,4 +1,4 @@
-import { assetManager, BlockInputEvents, Component, director, EventTouch, log, Node, Size, sys, tween, UIOpacity, UITransform, v2, v3, Vec2, Vec3, view, find, ScrollView, Layout, Constructor, Sprite, Color, sp, Layers, Label, Button } from 'cc';
+import { assetManager, BlockInputEvents, Component, director, EventTouch, log, Node, Size, sys, tween, UIOpacity, UITransform, v2, v3, Vec2, Vec3, view, find, ScrollView, Layout, Constructor, Sprite, Color, sp, Layers, Label, Button, CCObject } from 'cc';
 
 export namespace UIUtils {
 
@@ -427,4 +427,47 @@ export namespace MathUtil {
         })
         return count;
     }
+}
+/**
+ *
+ * 判断cc对象的有效性
+ */
+ export function isVaild(...ccObjects: CCObject[]) {
+    if (ccObjects && ccObjects.length) {
+        for (let i = 0; i < ccObjects.length; i++) {
+            const obj = ccObjects[i];
+            if (!obj || !obj.isValid)
+                return false;
+            if (obj instanceof Component && (!obj.node || !obj.isValid))
+                return false;
+        }
+    }
+    return true;
+}
+export function destroyAllChildren(node: Node) {
+    node?.children?.forEach(item => isVaild(item) && item.destroy());
+}
+
+export function destroyNode(node: Node) {
+    if (node && node.isValid) {
+        node.destroy();
+    }
+}
+/**
+ * 延时指定时间后执行
+ * @param time 单位 秒
+ */
+ export async function delay(time: number) {
+    // 使用tween的好处在于可以用Tween停止
+    return new Promise<void>(resolve => {
+        // _component.scheduleOnce(() => {
+        //     resolve();
+        // }, time);
+        tween(v2())
+            .delay(time)
+            .call(() => {
+                resolve();
+            })
+            .start();
+    });
 }
