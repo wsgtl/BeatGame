@@ -65,6 +65,7 @@ export class MainComponent extends Component {
     private onSlider(s:Slider) {
         this.BPM = Math.round(s.progress * (this.MAX_BPM - this.MIN_BPM) + this.MIN_BPM);
         this.setEditBox();
+        
     }
     private setSlider(){
         this.slider.progress = (this.BPM - this.MIN_BPM) / (this.MAX_BPM - this.MIN_BPM);
