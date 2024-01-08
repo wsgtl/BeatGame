@@ -1,4 +1,6 @@
 import { _decorator, Component, Node, instantiate, view, Label, Slider, EditBox, macro } from 'cc';
+import { BaseStorage, ITEM_STORAGE } from './BaseStorage';
+import { BPM, DEFEAUT_BPM, MAX_BPM, MIN_BPM, setBPM } from './ConstVar';
 import { UIUtils } from './UIUtil';
 const { ccclass, property } = _decorator;
 
@@ -22,10 +24,7 @@ export class MainComponent extends Component {
 
 
     private partArr: Node[] = [];
-    /**节拍速度 */
-    private BPM:number = 60;
-    private readonly MAX_BPM = 400;
-    private readonly MIN_BPM = 20;
+   
     onLoad() {
         this.partArr.push(this.partNode);
         const p = instantiate(this.partNode);
@@ -58,21 +57,21 @@ export class MainComponent extends Component {
 
     private onChangeBPM(e:EditBox) {
         const b = parseInt(e.string);
-        this.BPM = Math.max(this.MIN_BPM,Math.min(this.MAX_BPM,b));
+        setBPM(Math.max(MIN_BPM,Math.min(MAX_BPM,b)));
         this.setEditBox();
         this.setSlider();
     }
     private onSlider(s:Slider) {
-        this.BPM = Math.round(s.progress * (this.MAX_BPM - this.MIN_BPM) + this.MIN_BPM);
+        setBPM(Math.round(s.progress * (MAX_BPM - MIN_BPM) + MIN_BPM));
         this.setEditBox();
-        
     }
     private setSlider(){
-        this.slider.progress = (this.BPM - this.MIN_BPM) / (this.MAX_BPM - this.MIN_BPM);
+        this.slider.progress = (BPM - MIN_BPM) / (MAX_BPM - MIN_BPM);
     }
     private setEditBox(){
-        this.editBox.string = this.BPM.toString();
+        this.editBox.string = BPM.toString();
     }
+
 
 }
 

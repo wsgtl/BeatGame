@@ -1,4 +1,6 @@
 import { _decorator, Component, Node, instantiate, Widget, Tween, tween, UIOpacity, v3 } from 'cc';
+import { BaseStorage, ITEM_STORAGE } from './BaseStorage';
+import { BPM } from './ConstVar';
 import { RectComponent } from './RectComponent';
 import { playEffect } from './SoundComponent';
 import { delay, MathUtil, UIUtils } from './UIUtil';
@@ -42,16 +44,16 @@ export class PartComponent extends Component {
     onBeat(){
         playEffect("AfricanDrum");
         // this.beatNode.getComponent(Widget).updateAlignment();
-        // const op = this.beatNode.getComponent(UIOpacity);
-        // op.opacity = 255;
-        // Tween.stopAllByTarget(op);
-        // tween(op).to(0.2,{opacity:0}).start();
+        const op = this.beatNode.getComponent(UIOpacity);
+        op.opacity = 255;
+        Tween.stopAllByTarget(op);
+        tween(op).to(0.2,{opacity:0}).start();
         this.curRect?.getComponent(RectComponent).click();
     }
     private beatNum = 0;
     private curRect:Node = null;
     private async startGame(){
-        const time = 1;
+        const time = 60 / BPM ;
         const aniTime = time/10;
         await delay(time - aniTime);
         this.beatNum++;
@@ -74,6 +76,7 @@ export class PartComponent extends Component {
         await delay(aniTime);
         this.startGame();
     }
+
 }
 
 
